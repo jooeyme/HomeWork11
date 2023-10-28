@@ -1,0 +1,30 @@
+version: '3'
+
+networks:
+  app-tier:
+    driver: bridge
+
+services:
+  todoAPI:
+    build: .
+    networks:
+      - app-tier
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+    depends_on:
+      - localhost
+    volumes:
+      - "./:/todoAPI/src/app"
+
+  localhost:
+    image: postgres
+    environment:
+      POSTGRES_PASSWORD: admin
+      POSTGRES_USER: postgres
+      POSTGRES_DB: todos
+    ports:
+      - "5432:5432"
+    networks:
+      - app-tier
